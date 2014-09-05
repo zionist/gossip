@@ -1113,6 +1113,49 @@ func TestUnstreamedParse7(t *testing.T) {
     test.Test(t)
 }
 
+// TODO: Error cases for unstreamed parse.
+// TODO: Multiple writes on unstreamed parse.
+
+// Basic streamed parsing, using empty INVITE.
+func TestStreamedParse1(t *testing.T) {
+    nilMap := make(map[string]*string)
+    contentLength := base.ContentLength(0)
+    test := ParserTest{true, []parserTestStep {
+        // Steps each have: Input, result, sent error, returned error
+        parserTestStep{"INVITE sip:bob@biloxi.com SIP/2.0\r\n" +
+                       "Content-Length: 0\r\n\r\n",
+                       base.NewRequest(base.INVITE,
+                                       &base.SipUri{false, &bob, nil, "biloxi.com", nil, nilMap, nilMap},
+                                       "SIP/2.0",
+                                       []base.SipHeader {&contentLength},
+                                       ""),
+                       nil,
+                       nil},
+    }}
+
+    test.Test(t)
+}
+/*
+// Test writing a single message in two stages (breaking after the start line).
+func TestStreamedParse2(t *testing.T) {
+    nilMap := make(map[string]*string)
+    contentLength := base.ContentLength(0)
+    test := ParserTest{true, []parserTestStep {
+        // Steps each have: Input, result, sent error, returned error
+        parserTestStep{"INVITE sip:bob@biloxi.com SIP/2.0\r\n", nil, nil, nil},
+        parserTestStep{"Content-Length: 0\r\n\r\n",
+                       base.NewRequest(base.INVITE,
+                                       &base.SipUri{false, &bob, nil, "biloxi.com", nil, nilMap, nilMap},
+                                       "SIP/2.0",
+                                       []base.SipHeader {&contentLength},
+                                       ""),
+                       nil,
+                       nil},
+    }}
+
+    test.Test(t)
+}
+*/
 type paramInput struct {
     paramString string
     start uint8
@@ -1769,7 +1812,7 @@ func (step *parserTestStep) Test(parser Parser, msgChan chan base.SipMessage, er
         return
     }
 
-    if err == nil {
+    if err == nil { // TODO this is wrong - what about chan errs?
         select {
         case msg := <- msgChan:
             if msg == nil && step.result != nil {
