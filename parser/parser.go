@@ -159,6 +159,8 @@ func (p *parser) parse(lines <- chan string, requireContentLength bool) {
             break
         }
 
+        log.Debug("Parsed startline '%s'", startLine)
+
         // Parse the header section.
         // Headers can be split across lines (marked by whitespace at the start of subsequent lines),
         // so store lines into a buffer, and then flush and parse it when we hit the end of the header.
@@ -179,6 +181,7 @@ func (p *parser) parse(lines <- chan string, requireContentLength bool) {
 
         for {
             line := <- lines
+            log.Debug("Line in: '%s'", line)
             if len(line) == 0 {
                 // We've hit the end of the header section.
                 // Parse anything remaining in the buffer, then break out.

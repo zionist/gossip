@@ -16,7 +16,7 @@ import (
 )
 
 // Level of logs output during testing.
-var c_LOG_LEVEL = log.INFO
+var c_LOG_LEVEL = log.DEBUG
 
 var testsRun int
 var testsPassed int
@@ -1135,7 +1135,7 @@ func TestStreamedParse1(t *testing.T) {
 
     test.Test(t)
 }
-/*
+
 // Test writing a single message in two stages (breaking after the start line).
 func TestStreamedParse2(t *testing.T) {
     nilMap := make(map[string]*string)
@@ -1155,7 +1155,7 @@ func TestStreamedParse2(t *testing.T) {
 
     test.Test(t)
 }
-*/
+
 type paramInput struct {
     paramString string
     start uint8
@@ -1812,7 +1812,8 @@ func (step *parserTestStep) Test(parser Parser, msgChan chan base.SipMessage, er
         return
     }
 
-    if err == nil { // TODO this is wrong - what about chan errs?
+    // TODO - check returns here as they look a bit fishy.
+    if err == nil {
         select {
         case msg := <- msgChan:
             if msg == nil && step.result != nil {
