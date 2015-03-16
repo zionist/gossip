@@ -81,6 +81,9 @@ type SipUri struct {
 	// guarantees to not return nil values for header elements in SIP URIs.
 	// You should not set the values of headers to nil.
 	Headers Params
+
+	// Tel uri type
+	UriType string
 }
 
 // Copy the Sip URI.
@@ -108,6 +111,7 @@ func (uri *SipUri) Copy() Uri {
 		port,
 		uri.UriParams.Copy(),
 		uri.Headers.Copy(),
+		uri.UriType,
 	}
 }
 
@@ -152,13 +156,8 @@ func (uri *SipUri) String() string {
 	var buffer bytes.Buffer
 
 	// Compulsory protocol identifier.
-	if uri.IsEncrypted {
-		buffer.WriteString("sips")
-		buffer.WriteString(":")
-	} else {
-		buffer.WriteString("sip")
-		buffer.WriteString(":")
-	}
+	buffer.WriteString(uri.UriType)
+	buffer.WriteString(":")
 
 	// Optional userinfo part.
 	if uri.User != nil {

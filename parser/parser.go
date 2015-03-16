@@ -427,11 +427,19 @@ func ParseUri(uriStr string) (uri base.Uri, err error) {
 	case "sip":
 		var sipUri base.SipUri
 		sipUri, err = ParseSipUri(uriStr)
+		sipUri.UriType = "sip"
 		uri = &sipUri
 	case "sips":
 		// SIPS URIs have the same form as SIP uris, so we use the same parser.
 		var sipUri base.SipUri
 		sipUri, err = ParseSipUri(uriStr)
+		sipUri.UriType = "ssip"
+		uri = &sipUri
+	case "tel":
+		// Teligent protocol specific patch
+		var sipUri base.SipUri
+		sipUri, err = ParseSipUri(uriStr)
+		sipUri.UriType = "tel"
 		uri = &sipUri
 	default:
 		err = fmt.Errorf("Unsupported URI schema %s", uriStr[:colonIdx])
@@ -446,17 +454,11 @@ func ParseSipUri(uriStr string) (uri base.SipUri, err error) {
 	uriStrCopy := uriStr
 
 	// URI should start 'sip' or 'sips'. Check the first 3 chars.
-	if strings.ToLower(uriStr[:3]) != "sip" {
+	if strings.ToLower(uriStr[:3]) != "sip" && strings.ToLower(uriStr[:3]) != "tel" {
 		err = fmt.Errorf("invalid SIP uri protocol name in '%s'", uriStrCopy)
 		return
 	}
 	uriStr = uriStr[3:]
-
-	if strings.ToLower(uriStr[0:1]) == "s" {
-		// URI started 'sips', so it's encrypted.
-		uri.IsEncrypted = true
-		uriStr = uriStr[1:]
-	}
 
 	// The 'sip' or 'sips' protocol name should be followed by a ':' character.
 	if uriStr[0] != ':' {
