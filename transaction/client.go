@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/discoviking/fsm"
-	"github.com/stefankopieczek/gossip/base"
-	"github.com/stefankopieczek/gossip/log"
+	"github.com/zionist/gossip/base"
+	"github.com/zionist/gossip/log"
 )
 
 // SIP Client Transaction FSM

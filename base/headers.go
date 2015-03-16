@@ -1,7 +1,7 @@
 package base
 
 import (
-	"github.com/stefankopieczek/gossip/utils"
+	"github.com/zionist/gossip/utils"
 )
 
 import "bytes"

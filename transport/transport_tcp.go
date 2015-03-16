@@ -1,9 +1,9 @@
 package transport
 
 import (
-	"github.com/stefankopieczek/gossip/base"
-	"github.com/stefankopieczek/gossip/log"
-	"github.com/stefankopieczek/gossip/parser"
+	"github.com/zionist/gossip/base"
+	"github.com/zionist/gossip/log"
+	"github.com/zionist/gossip/parser"
 )
 
 import "net"
